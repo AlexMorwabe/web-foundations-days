@@ -1,0 +1,207 @@
+/* QuickNotes Day 2 shared stylesheet */
+
+/* Box-sizing reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Base page styles */
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+  color: #243447;
+  background: #f4f7fb;
+}
+
+/* Header */
+header {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: white;
+  background: #1f4e78;
+}
+
+header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+}
+
+header p {
+  margin: 0 0 1.25rem;
+}
+
+/* Navigation: Flexbox row, centered, 16px gap */
+nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+nav a {
+  padding: 0.5rem 0.75rem;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+nav a:hover,
+nav a:focus {
+  background: #163a5a;
+  text-decoration: underline;
+}
+
+/* Main content */
+main {
+  width: 90%;
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+main h2 {
+  margin-top: 0;
+  color: #1f4e78;
+}
+
+section {
+  margin-top: 2rem;
+}
+
+/* Features: responsive CSS Grid cards */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.features li {
+  padding: 1.25rem;
+  background: #eef5fb;
+  border: 1px solid #c9dceb;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* Keyboard shortcuts table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+table th,
+table td {
+  padding: 0.75rem;
+  border: 1px solid #b8c7d6;
+  text-align: left;
+}
+
+table th {
+  background: #e8f0f7;
+}
+
+caption {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  text-align: left;
+}
+
+/* Feedback form */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+form p {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+form label {
+  margin-bottom: 0.35rem;
+  font-weight: bold;
+}
+
+form input,
+form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  font: inherit;
+  border: 1px solid #aebdca;
+  border-radius: 4px;
+}
+
+form input:focus,
+form textarea:focus {
+  outline: 2px solid #6ca6d8;
+  outline-offset: 1px;
+}
+
+button {
+  width: fit-content;
+  padding: 0.7rem 1.25rem;
+  color: white;
+  background: #1f4e78;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+button:hover,
+button:focus {
+  background: #163a5a;
+  transform: translateY(-1px);
+}
+
+/* Footer */
+footer {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: #526575;
+}
+
+/* Responsive layout for small screens */
+@media (max-width: 600px) {
+  header {
+    padding: 1.5rem 0.75rem;
+  }
+
+  header h1 {
+    font-size: 1.6rem;
+  }
+
+  main {
+    width: 94%;
+    margin: 1rem auto;
+    padding: 1.25rem;
+  }
+
+  nav {
+    flex-wrap: wrap;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+}
