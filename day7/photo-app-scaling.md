@@ -11,8 +11,6 @@
 - Thumbnail photo file size: 50 KB (0.05 MB)
 - Seconds in a day: $86,400 \approx 100,000$ seconds for simplified estimation (using standard 86,400 for precise rates)
 
----
-
 ### Quantitative Estimates
 
 #### A. Uploads Per Second
@@ -23,19 +21,18 @@
   $$11.57 \times 5 \approx 57.85 \text{ uploads/sec}$$
 
 #### B. Feed Views Per Second
-- **' Total daily feed views**: $1,000,000 \text{ active users} \times 50 \text{ pages} = 50,000,000 \text{ views/day}$
-- **' Average Feed Views/sec**: 
+- **Total daily feed views**: $1,000,000 \text{ active users} \times 50 \text{ pages} = 50,000,000 \text{ views/day}$
+- **Average Feed Views/sec**: 
   $$\frac{50,000,000 \text{ views}}{86,400 \text{ seconds}} \approx 578.7 \text{ views/sec}$$
-- **' Peak Feed Views/sec (5× multiplier)**: 
+- **Peak Feed Views/sec (5× multiplier)**: 
   $$578.7 \times 5 \approx 2,893.5 \text{ views/sec}$$
 
 #### C. Storage Required Per Year
-- **' Storage per photo**: $2\text{ MB (original)} + 0.05\text{ MB (thumbnail)} = 2.05\text{ MB/photo}$
-- **' Daily storage increment**: $1,000,000 \text{ photos} \times 2.05\text{ MB} = 2,050,000\text{ MB/day} \approx 2.05\text{ TB/day}$
-- **' Annual storage increment**: 
+- **Storage per photo**: $2\text{ MB (original)} + 0.05\text{ MB (thumbnail)} = 2.05\text{ MB/photo}$
+- **Daily storage increment**: $1,000,000 \text{ photos} \times 2.05\text{ MB} = 2,050,000\text{ MB/day} \approx 2.05\text{ TB/day}$
+- **Annual storage increment**: 
   $$2.05 \text{ TB/day} \times 365 \text{ days} = 748.25 \text{ TB/year}$$
 
----
 
 ## 2. Read-Heavy vs. Write-Heavy Analysis
 
@@ -46,7 +43,6 @@ SnapShare is a **read-heavy** system. The ratio of feed views to photo uploads i
 2. **Database Read Replicas**: Database traffic should be segregated so that write operations hit the primary database, while read operations are distributed across scalable read replicas.
 3. **CDN Offloading**: Media assets (images and thumbnails) must be served directly via Content Delivery Networks (CDNs) rather than application servers to minimize latency and bandwidth consumption.
 
----
 
 ## 3. Storage Strategy: Why Binary Media Belongs in Object Storage
 
@@ -60,10 +56,10 @@ Binary photo files must **never** be stored directly inside relational databases
 ### The Correct Approach: Object Storage + Database Metadata
 Photos and thumbnails should be stored in an **Object Storage Service** (such as AWS S3 or MinIO). The relational database stores only structural metadata (such as `photo_id`, `user_id`, `upload_timestamp`, and the object store `image_url` / `thumbnail_url` strings).
 
----
 
 ## 4. Architecture Diagram
-							[ User Client ]
+
+                          [ User Client ]
                                |   |
               +----------------+   +-----------------+
               | (Static Assets/Images)              | (API / Feed / Uploads)
@@ -73,17 +69,17 @@ Photos and thumbnails should be stored in an **Object Storage Service** (such as
               +---------------+                     +-----------------+
                               |                                       |
                               v                                       v
-                    [ Object Storage ]              [ App Servers (Stateless)]
-                      (S3 / MinIO)                     /          |           \
-                           ^                          /      	  |            \
-                           |                         v       	  v             v
+                    [ Object Storage ]              [ App Servers (Stateless) ]
+                      (S3 / MinIO)                     /     |           \
+                           ^                          /      |            \
+                           |                         v       v             v
                    [ Background Worker ] <-- [ Message Queue ]  [ Cache ]  [ Primary DB ]
                                              (RabbitMQ/Redis)   (Redis)      (Writes)
                                                                                 |
                                                                                 v
                                                                          [ Read Replica ]
                                                                              (Reads)
-																			 ---
+
 
 ## 5. Component Explanations
 
@@ -97,7 +93,6 @@ Photos and thumbnails should be stored in an **Object Storage Service** (such as
 8. **Message Queue**: Decouples photo uploading from image processing tasks by buffering asynchronous jobs (e.g., thumbnail generation tasks) for processing.
 9. **Background Worker**: Consumes image processing tasks asynchronously from the queue to scale, convert, and upload thumbnails without blocking the user upload HTTP response.
 
----
 
 ## 6. Step-by-Step Photo Upload Flow
 
@@ -110,7 +105,6 @@ Photos and thumbnails should be stored in an **Object Storage Service** (such as
 7. **Thumbnail Processing**: A **Background Worker** pulls the job off the **Message Queue**, downloads the original image from **Object Storage**, resizes it to 50 KB, and uploads the thumbnail back to **Object Storage**.
 8. **Record Update & Cache Invalidation**: The **Background Worker** updates the database record with the `thumbnail_url` and invalidates or updates relevant feed keys in the **Cache** (Redis) so followers see the updated photo feed.
 
----
 
 ## 7. Architecture Trade-Offs
 
