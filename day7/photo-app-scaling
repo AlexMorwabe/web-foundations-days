@@ -23,16 +23,16 @@
   $$11.57 \times 5 \approx 57.85 \text{ uploads/sec}$$
 
 #### B. Feed Views Per Second
-- **Total daily feed views**: $1,000,000 \text{ active users} \times 50 \text{ pages} = 50,000,000 \text{ views/day}$
-- **Average Feed Views/sec**: 
+- **' Total daily feed views**: $1,000,000 \text{ active users} \times 50 \text{ pages} = 50,000,000 \text{ views/day}$
+- **' Average Feed Views/sec**: 
   $$\frac{50,000,000 \text{ views}}{86,400 \text{ seconds}} \approx 578.7 \text{ views/sec}$$
-- **Peak Feed Views/sec (5× multiplier)**: 
+- **' Peak Feed Views/sec (5× multiplier)**: 
   $$578.7 \times 5 \approx 2,893.5 \text{ views/sec}$$
 
 #### C. Storage Required Per Year
-- **Storage per photo**: $2\text{ MB (original)} + 0.05\text{ MB (thumbnail)} = 2.05\text{ MB/photo}$
-- **Daily storage increment**: $1,000,000 \text{ photos} \times 2.05\text{ MB} = 2,050,000\text{ MB/day} \approx 2.05\text{ TB/day}$
-- **Annual storage increment**: 
+- **' Storage per photo**: $2\text{ MB (original)} + 0.05\text{ MB (thumbnail)} = 2.05\text{ MB/photo}$
+- **' Daily storage increment**: $1,000,000 \text{ photos} \times 2.05\text{ MB} = 2,050,000\text{ MB/day} \approx 2.05\text{ TB/day}$
+- **' Annual storage increment**: 
   $$2.05 \text{ TB/day} \times 365 \text{ days} = 748.25 \text{ TB/year}$$
 
 ---
