@@ -58,29 +58,26 @@ Photos and thumbnails should be stored in an **Object Storage Service** (such as
 
 
 ## 4. Architecture Diagram
-
-                          [ User Client ]
-                               |   |
-              +----------------+   +-----------------+
-              | (Static Assets/Images)              | (API / Feed / Uploads)
-              v                                     v
-        [ Global CDN ]                      [ Load Balancer ]
-              |                                     |
-              +---------------+                     +-----------------+
-                              |                                       |
-                              v                                       v
-                    [ Object Storage ]              [ App Servers (Stateless) ]
-                      (S3 / MinIO)                     /     |           \
-                           ^                          /      |            \
-                           |                         v       v             v
-                   [ Background Worker ] <-- [ Message Queue ]  [ Cache ]  [ Primary DB ]
-                                             (RabbitMQ/Redis)   (Redis)      (Writes)
-                                                                                |
-                                                                                v
-                                                                         [ Read Replica ]
-                                                                             (Reads)
-
-
+					[ User Client ]
+                        |   |
+       +----------------+   +-----------------+
+       | (Static Assets/Images)               | (API / Feed / Uploads)
+       v                                      v
+ [ Global CDN ]                      [ Load Balancer ]
+       |                                      |
+       +---------------+                      +-----------------+
+                       |                                        |
+                       v                                        v
+             [ Object Storage ]              [ App Servers (Stateless) ]
+               (S3 / MinIO)                      /     |            \
+                    ^                           /      |             \
+                    |                          v       v              v
+            [ Background Worker ] <-- [ Message Queue ]  [ Cache ]  [ Primary DB ]
+                                       (RabbitMQ/Redis)   (Redis)      (Writes)
+                                                                          |
+                                                                          v
+                                                                    [ Read Replica ]
+                                                                       (Reads)
 ## 5. Component Explanations
 
 1. **Global CDN**: Serves cached static media assets (photos and thumbnails) from edge locations close to users to minimize latency and offload bandwidth from origin storage.
@@ -105,15 +102,14 @@ Photos and thumbnails should be stored in an **Object Storage Service** (such as
 7. **Thumbnail Processing**: A **Background Worker** pulls the job off the **Message Queue**, downloads the original image from **Object Storage**, resizes it to 50 KB, and uploads the thumbnail back to **Object Storage**.
 8. **Record Update & Cache Invalidation**: The **Background Worker** updates the database record with the `thumbnail_url` and invalidates or updates relevant feed keys in the **Cache** (Redis) so followers see the updated photo feed.
 
-
 ## 7. Architecture Trade-Offs
 
 ### Trade-Off 1: Asynchronous Processing vs. Immediate Consistency
-* **Choice**: Processing thumbnails asynchronously using a queue/worker pattern rather than synchronously during the HTTP request.
-* **Pros**: Significantly faster upload response times for users and improved system stability under peak load spikes.
-* **Cons**: Introduces **eventual consistency**; a user or follower might view the feed milliseconds after uploading and see a placeholder before the thumbnail has finished rendering and uploading.
+- **Choice**: Processing thumbnails asynchronously using a queue/worker pattern rather than synchronously during the HTTP request.
+- **Pros**: Significantly faster upload response times for users and improved system stability under peak load spikes.
+- **Cons**: Introduces **eventual consistency**; a user or follower might view the feed milliseconds after uploading and see a placeholder before the thumbnail has finished rendering and uploading.
 
 ### Trade-Off 2: Read Replicas vs. Write Consistency Delay
-* **Choice**: Offloading feed read queries to asynchronous database read replicas.
-* **Pros**: Massively scales read throughput, ensuring feed views remain fast even with thousands of concurrent peak requests.
-* **Cons**: **Replication lag** can occur between the Primary Database and Read Replicas. A user might post an update and refresh immediately, briefly failing to see their newly created post until replication catches up.
+- **Choice**: Offloading feed read queries to asynchronous database read replicas.
+- **Pros**: Massively scales read throughput, ensuring feed views remain fast even with thousands of concurrent peak requests.
+- **Cons**: **Replication lag** can occur between the Primary Database and Read Replicas. A user might post an update and refresh immediately, briefly failing to see their newly created post until replication catches up.
