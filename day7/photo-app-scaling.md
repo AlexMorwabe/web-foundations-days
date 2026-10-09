@@ -66,8 +66,8 @@ Photos and thumbnails should be stored in an **Object Storage Service** (such as
  [ Global CDN ]                      [ Load Balancer ]
        |                                      |
        +---------------+                      +-----------------+
-                       |                                        |
-                       v                                        v
+                     |                                        |
+                     v                                        v
              [ Object Storage ]              [ App Servers (Stateless) ]
                (S3 / MinIO)                      /     |            \
                     ^                           /      |             \
