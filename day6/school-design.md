@@ -15,7 +15,7 @@
 
 ```sql
 CREATE INDEX idx_enrolments_student_id ON enrolments(student_id);
-
+```
 ##Reason:
 In a typical school system, lookups filtering by student_id (e.g., retrieving student transcripts or active schedules) happen frequently. Creating an index on enrolments.student_id drastically speeds up JOIN queries between the students and enrolments tables by avoiding full table scans as the dataset grows.
 
