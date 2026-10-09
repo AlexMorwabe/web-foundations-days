@@ -16,8 +16,8 @@
 ```sql
 CREATE INDEX idx_enrolments_student_id ON enrolments(student_id);
 ```
-##Reason:
+## Reason:
 In a typical school system, lookups filtering by student_id (e.g., retrieving student transcripts or active schedules) happen frequently. Creating an index on enrolments.student_id drastically speeds up JOIN queries between the students and enrolments tables by avoiding full table scans as the dataset grows.
 
-##SQL vs. NoSQL Justification
+## SQL vs. NoSQL Justification
 For a school enrolment system, SQL (Relational Database) is the vastly superior choice over NoSQL. School systems require high transactional integrity and strict constraints—such as guaranteeing unique email addresses, enforcing referential integrity with foreign keys so enrolments cannot reference nonexistent students, and preventing duplicate course registrations. SQL ensures ACID compliance out of the box and simplifies multi-table queries (such as generating student transcripts or aggregate enrolment statistics) through standardized JOIN operations.
